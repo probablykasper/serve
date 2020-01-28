@@ -16,7 +16,7 @@ clean:
 	rm -f ./serve
 
 init:
-	dep ensure
+	go mod vendor
 
 run:
 	go run serve.go
@@ -30,7 +30,7 @@ build_linux:
 	docker run \
 		--rm -v ${CURDIR}:/go/src/github.com/sandeepraju/serve \
 		-w /go/src/github.com/sandeepraju/serve golang:${GO_VERSION} \
-		sh -c 'go get -u github.com/golang/dep/cmd/dep && dep ensure && go build -o ./_build/release/linux_x64/serve .'
+		sh -c 'go vendor && go build -o ./_build/release/linux_x64/serve .'
 
 release_macos:
 	zip -j ${MACOS_X64_ZIP_TARGET} ${MACOS_X64_BIN_TARGET}
