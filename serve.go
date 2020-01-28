@@ -30,9 +30,6 @@ EXAMPLES:
 	 * Serve /tmp
 
 			serve -d /tmp`
-	app.Authors = []cli.Author{
-		{Name: "Sandeep Raju Prabhakar", Email: "me@sandeepraju.in"},
-	}
 	app.Flags = []cli.Flag{
 		cli.StringFlag{
 			Name:  "directory, dir, d",
@@ -50,7 +47,7 @@ EXAMPLES:
 			Value: 8888,
 		},
 		cli.BoolFlag{
-			Name:  "quiet, q",
+			Name:  "log-requests, verbose, V",
 			Usage: "Don't print access logs",
 		},
 	}
@@ -59,11 +56,11 @@ EXAMPLES:
 		addr := c.String("address")
 		port := c.Int("port")
 		dir := c.String("directory")
-		quiet := c.Bool("quiet")
+		verbose := c.Bool("verbose")
 
 		loggingHandler := func(h http.Handler) http.Handler {
 			return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-				if !quiet {
+				if verbose {
 					log.Println(r.RemoteAddr, r.Method, r.URL.Path, r.URL.RawQuery)
 				}
 				h.ServeHTTP(w, r)
