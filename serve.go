@@ -42,7 +42,7 @@ EXAMPLES:
 		cli.StringFlag{
 			Name:  "address, a",
 			Usage: "The IP address or hostname of the interface",
-			Value: "localhost",
+			Value: "0.0.0.0",
 		},
 		cli.IntFlag{
 			Name:  "port, p",
