@@ -28,7 +28,7 @@ OPTIONS:
 func main() {
 	app := cli.NewApp()
 	cli.AppHelpTemplate = helpText
-	app.Version = "0.0.2"
+	app.Version = "1.0.0"
 	app.HideHelp = true // so `serve help` works
 	app.Flags = []cli.Flag{
 		cli.StringFlag{
