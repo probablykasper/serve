@@ -11,31 +11,9 @@ import (
 
 func main() {
 	app := cli.NewApp()
-	app.Name = "serve"
 	app.Version = "0.0.2"
-	app.Usage = ""
-	app.Description = `A simple HTTP server for serving static files.
-
-   See https://github.com/sandeepraju/serve for more details!
-
-EXAMPLES:
-   * Serve files in the current directory
-
-			serve
-
-   * Serve at port 8000 on 192.168.0.3
-
-	    serve -a 192.168.0.3 -p 8000
-
-	 * Serve /tmp
-
-			serve -d /tmp`
+	app.HideHelp = true // so `serve help` works
 	app.Flags = []cli.Flag{
-		cli.StringFlag{
-			Name:  "directory, dir, d",
-			Usage: "The directory to serve",
-			Value: "./",
-		},
 		cli.StringFlag{
 			Name:  "address, a",
 			Usage: "The IP address or hostname of the interface",
@@ -48,15 +26,25 @@ EXAMPLES:
 		},
 		cli.BoolFlag{
 			Name:  "log-requests, verbose, V",
-			Usage: "Don't print access logs",
+			Usage: "Log requests",
+		},
+		cli.BoolFlag{
+			Name:  "help, h",
+			Usage: "Show help menu",
 		},
 	}
 	app.Action = func(c *cli.Context) error {
 
 		addr := c.String("address")
 		port := c.Int("port")
-		dir := c.String("directory")
+		dir := c.Args().Get(0)
+		if len(c.Args()) == 0 {
+			dir = "./"
+		}
 		verbose := c.Bool("verbose")
+		if c.Bool("help") {
+			cli.ShowAppHelpAndExit(c, 0)
+		}
 
 		loggingHandler := func(h http.Handler) http.Handler {
 			return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
