@@ -20,4 +20,4 @@ vendor/
 serve
 
 # Ignore the build folder
-_build/
+build/
