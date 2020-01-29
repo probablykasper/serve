@@ -2,17 +2,17 @@
 
 GO_VERSION=1.13
 
-MACOS_X64_BIN_TARGET=${CURDIR}/_build/release/macos_x64/serve
-MACOS_X64_ZIP_TARGET=${CURDIR}/_build/release/macos_x64/serve-macos_x64.zip
+MACOS_X64_BIN_TARGET=${CURDIR}/build/release/macos_x64/serve
+MACOS_X64_ZIP_TARGET=${CURDIR}/build/release/macos_x64/serve-macos_x64.zip
 
-LINUX_X64_BIN_TARGET=${CURDIR}/_build/release/linux_x64/serve
-LINUX_X64_ZIP_TARGET=${CURDIR}/_build/release/linux_x64/serve-linux_x64.zip
+LINUX_X64_BIN_TARGET=${CURDIR}/build/release/linux_x64/serve
+LINUX_X64_ZIP_TARGET=${CURDIR}/build/release/linux_x64/serve-linux_x64.zip
 
 all:
 	clean
 
 clean:
-	rm -rf _build
+	rm -rf build
 	rm -f ./serve
 
 init:
@@ -30,14 +30,14 @@ build_linux:
 	docker run \
 		--rm -v ${CURDIR}:/go/src/github.com/sandeepraju/serve \
 		-w /go/src/github.com/sandeepraju/serve golang:${GO_VERSION} \
-		sh -c 'go mod vendor && go build -o ./_build/release/linux_x64/serve .'
+		sh -c 'go mod vendor && go build -o ./build/release/linux_x64/serve .'
 
 release_macos:
 	zip -j ${MACOS_X64_ZIP_TARGET} ${MACOS_X64_BIN_TARGET}
 	shasum -a256 ${MACOS_X64_ZIP_TARGET}
-	find _build -name *.zip
+	find build -name *.zip
 
 release_linux:
 	zip -j ${LINUX_X64_ZIP_TARGET} ${LINUX_X64_BIN_TARGET}
 	shasum -a256 ${LINUX_X64_ZIP_TARGET}
-	find _build -name *.zip
+	find build -name *.zip
