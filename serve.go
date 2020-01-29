@@ -1,8 +1,10 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"log"
+	"net"
 	"net/http"
 	"os"
 
@@ -77,7 +79,19 @@ func main() {
 		}
 
 		http.Handle("/", loggingHandler(http.FileServer(http.Dir(dir))))
-		log.Printf("Serving %s at http://%s:%d/", dir, addr, port)
+		fmt.Println("")
+		if addr == "0.0.0.0" {
+			externalAddr, err := externalIp()
+			if err != nil {
+				externalAddr = addr
+			}
+			fmt.Printf("  Serving %s at:\n", dir)
+			fmt.Printf("  - Local:   http://%s:%d\n", addr, port)
+			fmt.Printf("  - Network: http://%s:%d\n", externalAddr, port)
+		} else {
+			fmt.Printf("  Serving %s at %s:%d\n", dir, addr, port)
+		}
+		fmt.Println("")
 		err := http.ListenAndServe(fmt.Sprintf("%s:%d", addr, port), nil)
 		if err != nil {
 			log.Fatal(err)
@@ -87,4 +101,35 @@ func main() {
 	}
 
 	app.Run(os.Args)
+}
+
+func externalIp() (string, error) {
+	ifaces, err := net.Interfaces()
+	if err != nil {
+		return "", errors.New("Could not get local ip")
+	}
+	for _, i := range ifaces {
+		addrs, err := i.Addrs()
+		if err != nil {
+			return "", errors.New("Could not get local ip")
+		}
+		for _, addr := range addrs {
+			var ip net.IP
+			switch v := addr.(type) {
+			case *net.IPNet:
+				ip = v.IP
+			case *net.IPAddr:
+				ip = v.IP
+			}
+			if ip == nil || ip.IsLoopback() {
+				continue
+			}
+			ip = ip.To4()
+			if ip == nil {
+				continue // not an ipv4 address
+			}
+			return ip.String(), nil
+		}
+	}
+	return "", errors.New("Could not get local ip")
 }
