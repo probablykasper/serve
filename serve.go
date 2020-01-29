@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"time"
 
 	"github.com/urfave/cli"
 )
@@ -58,15 +59,27 @@ EXAMPLES:
 		dir := c.String("directory")
 		verbose := c.Bool("verbose")
 
+		var epoch = time.Unix(0, 0).Format(time.RFC1123)
 		loggingHandler := func(h http.Handler) http.Handler {
 			return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 				if verbose {
 					log.Println(r.RemoteAddr, r.Method, r.URL.Path, r.URL.RawQuery)
 				}
+				w.Header().Set("Expires", epoch)
+				w.Header().Set("Cache-Control", "no-cache, private, max-age=0")
+				w.Header().Set("Pragma", "no-cache")
+				w.Header().Set("X-Accel-Expires", "0")
+				w.Header().Del("ETag")
+				w.Header().Del("If-Modified-Since")
+				w.Header().Del("If-Match")
+				w.Header().Del("If-None-Match")
+				w.Header().Del("If-Range")
+				w.Header().Del("If-Unmodified-Since")
 				h.ServeHTTP(w, r)
 			})
 		}
 
+		fmt.Println(http.Dir(dir))
 		http.Handle("/", loggingHandler(http.FileServer(http.Dir(dir))))
 		log.Printf("Serving %s at http://%s:%d/", dir, addr, port)
 		err := http.ListenAndServe(fmt.Sprintf("%s:%d", addr, port), nil)
