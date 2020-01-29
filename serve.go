@@ -9,8 +9,23 @@ import (
 	"github.com/urfave/cli"
 )
 
+var helpText = `
+Serve {{.Version}}
+  
+USAGE:
+    serve [dir] [options...]
+
+EXAMPLE:
+    serve -p 80 ./website
+
+OPTIONS:
+    {{range .VisibleFlags}}{{.}}
+    {{end}}
+`
+
 func main() {
 	app := cli.NewApp()
+	cli.AppHelpTemplate = helpText
 	app.Version = "0.0.2"
 	app.HideHelp = true // so `serve help` works
 	app.Flags = []cli.Flag{
@@ -25,7 +40,7 @@ func main() {
 			Value: 8888,
 		},
 		cli.BoolFlag{
-			Name:  "log-requests, verbose, V",
+			Name:  "verbose, V",
 			Usage: "Log requests",
 		},
 		cli.BoolFlag{
