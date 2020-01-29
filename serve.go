@@ -39,7 +39,7 @@ func main() {
 		cli.IntFlag{
 			Name:  "port, p",
 			Usage: "The port to listen on",
-			Value: 8888,
+			Value: 2233,
 		},
 		cli.BoolFlag{
 			Name:  "verbose, V",
