@@ -11,7 +11,7 @@ brew install probablykasper/tap/serve
 
 Installing from source:
 ```
-go get github.com/sandeepraju/serve
+go get github.com/probablykasper/serve
 ```
 
 Download binaries
