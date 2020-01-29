@@ -15,8 +15,8 @@ go get github.com/probablykasper/serve
 ```
 
 Download binaries
-- [Linux x64](https://github.com/probablykasper/releases/latest/serve-linux_x64.zip)
-- [macOS x64](https://github.com/probablykasper/releases/latest/serve-macos_x64.zip)
+- [Linux x64](https://github.com/probablykasper/serve/releases/latest/download/serve-linux_x64.zip)
+- [macOS x64](https://github.com/probablykasper/serve/releases/latest/download/serve-macos_x64.zip)
 
 ## Usage
 
