@@ -1,6 +1,6 @@
 .PHONY: all clean init run build_macos build_linux release_macos release_linux
 
-GO_VERSION=1.10
+GO_VERSION=1.13
 
 MACOS_X64_BIN_TARGET=${CURDIR}/_build/release/macos_x64/serve
 MACOS_X64_ZIP_TARGET=${CURDIR}/_build/release/macos_x64/serve-macos_x64.zip
@@ -30,7 +30,7 @@ build_linux:
 	docker run \
 		--rm -v ${CURDIR}:/go/src/github.com/sandeepraju/serve \
 		-w /go/src/github.com/sandeepraju/serve golang:${GO_VERSION} \
-		sh -c 'go vendor && go build -o ./_build/release/linux_x64/serve .'
+		sh -c 'go mod vendor && go build -o ./_build/release/linux_x64/serve .'
 
 release_macos:
 	zip -j ${MACOS_X64_ZIP_TARGET} ${MACOS_X64_BIN_TARGET}
